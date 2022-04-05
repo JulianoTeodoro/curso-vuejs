@@ -1,26 +1,28 @@
 <template>
   <div id="app">
- <ContadorVue/>
+    <div class="jumbotron jumbotron-fluid">
+      <div class="container">
+        <h1 class="display-4">Requisições HTTP no Vue</h1>
+        <p class="lead">Usando a biblioteca Axios para fazer chamadas Ajax à uma API REST.</p>
+      </div>
+    </div>
+
+    <div class="container">
+        <TarefaLista/>
+        <br>
+        <ContadorVue/>
+    </div>
   </div>
 </template>
 
 <script>
 import ContadorVue from "./components/Contador.vue"
+import TarefaLista from './components/TarefaLista.vue'
 export default {
   name: 'App',
   components: {
-    ContadorVue
+    ContadorVue,
+    TarefaLista
   }
 }
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>

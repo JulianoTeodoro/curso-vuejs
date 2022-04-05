@@ -26,11 +26,11 @@
 </template>
 
 <script>
-import axios from 'axios'
+//import axios from 'axios'
 
 import TarefaListaIten from './TarefaListaIten.vue'
 import TarefaSalvar from './TarefaSalvar.vue'
-import config from '../../config/config'
+//import config from '../../config/config'
 
 export default {
     components: {
@@ -39,35 +39,32 @@ export default {
     },
     data(){
         return{
-            tarefas: [],
+            tarefas: [
+                {id: 1, titulo: 'Aprender Vue', concluido: true},
+                {id: 2, titulo: 'Aprender JS', concluido: true},
+                {id: 3, titulo: 'Aprender Axios', concluido: false},
+            ],
             exibirFormulario: false,
             tarefaSelecionada: undefined
         }
     },
-    created(){
-      axios.get(`${config.apiURL}/tarefas`)
-      .then((response) => {
-        this.tarefas = response.data;
-      })
-    },
+ //   created(){
+     // axios.get(`${config.apiURL}/tarefas`)
+     // .then((response) => {
+     //   this.tarefas = response.data;
+     // })
+   // },
     methods: {
         criarTarefa(tarefa){
             console.log('Criar: ', tarefa);
-            axios.post(`${config.apiURL}/tarefas`, tarefa)
-            .then((response) => {
-                console.log('Post ', response);
-                this.tarefas.push(response.data);
-                this.resetar();                
-            })
+            this.tarefas.push(tarefa);
+            this.resetar();                
         },
         editarTarefa(tarefa){
-            console.log('Editar: ', tarefa);
-            axios.put(`${config.apiURL}/tarefas/${tarefa.id}`, tarefa).then((response) => {
-                console.log(response);
+                console.log('Editar: ', tarefa);
                 const indice = this.tarefas.findIndex(t => t.id === tarefa.id);
                 this.tarefas.splice(indice, 1, tarefa);
                 this.resetar();
-            })
         },
         resetar(){
             this.exibirFormulario = false,
