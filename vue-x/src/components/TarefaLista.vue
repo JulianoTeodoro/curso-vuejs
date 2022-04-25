@@ -1,31 +1,42 @@
 <template>
    <div>
     <div class="row">
-    <div class="col-sm-10">
-    <h1 class="font-weight-light">Lista de Tarefas</h1>
+        <div class="col-sm-10">
+            <h1 class="font-weight-light">Lista de Tarefas</h1>
+        </div>
+        <div class="col-sm-2">
+            <button class="btn btn-primary float-right" @click="exibirFormularioCriarTarefa">
+                <i class="bi bi-plus mr-2"></i>
+                <span>Criar</span>
+            </button>
+        </div>
     </div>
-    <div class="col-sm-2">
-      <button class="btn btn-primary float-right" @click="exibirFormulario = !exibirFormulario">
-          <i class="bi bi-plus mr-2"></i>
-          <span>Criar</span>
-      </button>
-    </div>
-</div>
+    <br>
 
-    <ul class="list-group" v-if="tarefas.length > 0">
-        <tarefa-lista-iten v-for="tarefa in tarefas" :key="tarefa.id" :tarefa="tarefa" @editar="selecionarTarefaParaEdicao"></tarefa-lista-iten>
+    <h3 class="font-weight-light">A Fazer:  {{ $store.getters.totaldeTarefasAFazer }}</h3>
+    <ul class="list-group" v-if="tarefasAFazer.length > 0">
+        <tarefa-lista-iten v-for="tarefa in tarefasAFazer" :key="tarefa.id" :tarefa="tarefa" @editar="selecionarTarefaParaEdicao"></tarefa-lista-iten>
     </ul>
 
-    <p v-else>Nenhuma tarefa criada</p>
+    <p v-else>Nenhuma tarefa a fazer.</p>
+    <br>
+
+    <h3 class="font-weight-light">Concluidas:  {{ $store.getters.totaldeTarefasConcluidas }}</h3>
+    <ul class="list-group" v-if="tarefasConcluidas.length > 0">
+        <tarefa-lista-iten v-for="tarefa in tarefasConcluidas" :key="tarefa.id" :tarefa="tarefa" @editar="selecionarTarefaParaEdicao"></tarefa-lista-iten>
+    </ul>
+    <p v-else>Nenhuma tarefa concluida.</p>
 
     <tarefa-salvar
      v-if="exibirFormulario" 
      @criar="criarTarefa"
-     @editar="editarTarefa" />
+     @editar="editarTarefa"
+     :tarefa="tarefaSelecionada" />
     </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 //import axios from 'axios'
 
 import TarefaListaIten from './TarefaListaIten.vue'
@@ -37,13 +48,17 @@ export default {
         TarefaListaIten,
         TarefaSalvar
     },
+    computed: {
+        ...mapState(['tarefas'],),
+        tarefasConcluidas(){
+            return this.$store.getters.tarefasConcluidas;
+        },
+        tarefasAFazer(){
+            return this.$store.getters.tarefasAFazer;
+        }
+    },
     data(){
         return{
-            tarefas: [
-                {id: 1, titulo: 'Aprender Vue', concluido: true},
-                {id: 2, titulo: 'Aprender JS', concluido: true},
-                {id: 3, titulo: 'Aprender Axios', concluido: false},
-            ],
             exibirFormulario: false,
             tarefaSelecionada: undefined
         }
@@ -55,15 +70,22 @@ export default {
      // })
    // },
     methods: {
+        exibirFormularioCriarTarefa(){
+            if(this.tarefaSelecionada){
+                this.tarefaSelecionada = undefined;
+                return
+            }
+            this.exibirFormulario = !this.exibirFormulario;
+        },
         criarTarefa(tarefa){
             console.log('Criar: ', tarefa);
-            this.tarefas.push(tarefa);
+            this.$store.state.tarefas.push(tarefa);
             this.resetar();                
         },
         editarTarefa(tarefa){
                 console.log('Editar: ', tarefa);
-                const indice = this.tarefas.findIndex(t => t.id === tarefa.id);
-                this.tarefas.splice(indice, 1, tarefa);
+                const indice = this.$store.state.tarefas.findIndex(t => t.id === tarefa.id);
+                this.$store.state.tarefas.splice(indice, 1, tarefa);
                 this.resetar();
         },
         resetar(){

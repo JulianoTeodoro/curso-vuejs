@@ -13,13 +13,20 @@
 </div>
 
     <ul class="list-group" v-if="tarefas.length > 0">
-        <tarefa-lista-iten v-for="tarefa in tarefas" :key="tarefa.id" :tarefa="tarefa" @editar="selecionarTarefaParaEdicao"></tarefa-lista-iten>
+        <tarefa-lista-iten 
+        v-for="tarefa in tarefas" 
+        :key="tarefa.id" 
+        :tarefa="tarefa" 
+        @editar="selecionarTarefaParaEdicao" 
+        @deletar="deletarItem"
+        @concluir="conclusao"></tarefa-lista-iten>
     </ul>
 
     <p v-else>Nenhuma tarefa criada</p>
 
     <tarefa-salvar
      v-if="exibirFormulario" 
+     :tarefa="tarefaSelecionada"
      @criar="criarTarefa"
      @editar="editarTarefa" />
     </div>
@@ -76,6 +83,25 @@ export default {
         selecionarTarefaParaEdicao(tarefa){
              this.tarefaSelecionada = tarefa;
              this.exibirFormulario = true;
+        },
+        deletarItem(tarefa){
+            console.log('Remover: ', tarefa);
+            const confirmar = window.confirm('Deseja deletar a tarefa: ', tarefa.titulo);
+            if(confirmar){
+                axios.delete(`${config.apiURL}/tarefas/${tarefa.id}`, tarefa).then((response) => {
+                const indice = this.tarefas.findIndex(t => t.id === tarefa.id);
+                this.tarefas.splice(indice, 1);
+                console.log(`Delete tarefas/${tarefa.id}/`, response);
+                this.resetar();
+            })
+            }
+        },
+        conclusao(tarefa){
+            console.log('Concluir: ', tarefa);
+            axios.put(`${config.apiURL}/tarefas/${tarefa.id}`, tarefa).then((response) => {
+                tarefa.concluido = !tarefa.concluido
+                response.data.concluido = tarefa.concluido;
+            })
         }
     }
 }

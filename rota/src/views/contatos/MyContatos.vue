@@ -1,6 +1,6 @@
 <template>
     <div>
-        <contatos-lista></contatos-lista>
+        <ContatosLista/>
     </div>
 
 </template>

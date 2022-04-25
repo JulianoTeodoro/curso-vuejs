@@ -7,19 +7,26 @@
                 <div :class="classeColuna">
                     <div class="form-group">
                         <label>Titulo</label>
-                        <input type="text" class="form-control" v-model="tarefaLocal.titulo" placeholder="Titulo da Tarefa">
+                        <input 
+                            type="text" 
+                            class="form-control" 
+                            placeholder="Titulo da Tarefa"
+                            :value="tarefa && tarefa.titulo">
                     </div>
                 </div>
-                <div class="col-sm-2">
+                <div class="col-sm-2" v-if="tarefa">
                     <div class="form-group">
                         <label>Tarefa Concluida?</label>
-                        <button class="btn btn-sm d-block" :class="classeBotao" @click="tarefaLocal.concluido = !tarefaLocal.concluido">
-                            <i class="bi bi-check"></i>
+                        <button 
+                            type="button"
+                            class="btn btn-sm d-block" 
+                            :class="classeBotao">
+                                <i class="bi bi-check"></i>
                         </button>
                     </div>
                 </div>
             </div>
-
+<br>
             <button type="submit" class="btn btn-primary">Salvar</button>
         </form>
     </div>
@@ -34,30 +41,38 @@ export default {
             default: undefined
         }
     },
-    data(){
-        return{
-            tarefaLocal: Object.assign({}, {titulo: '', concluido: false}, this.tarefa)
-        }
-    },
+    //data(){
+    //    return{
+    //        tarefaLocal: Object.assign({}, {titulo: '', concluido: false}, this.tarefa)
+    //    }
+    // },
     computed: {
         classeBotao(){
-           return this.tarefa && this.tarefaLocal.concluido
-           ? 'btn-success' : 'btn-primary'
+           return this.tarefa && this.tarefa.concluido
+           ? 'btn-success' 
+           : 'btn-primary'
         },
         classeColuna(){
-            return this.tarefa ? 'col-sm-10' : 'col-sm-12'
+            return this.tarefa 
+            ? 'col-sm-10' 
+            : 'col-sm-12'
         },
     },
-    watch: {
-      tarefa(){
-          this.tarefaLocal = Object.assign({}, this.tarefa);
-      }
+    //watch: {
+    //  tarefa(){
+    //      this.tarefaLocal = Object.assign({}, this.tarefa);
+    //  }
+    //},
+    created(){
+        if(this.tarefa){
+            console.log('Tarefa por id: ', this.$store.getters.buscarTarefaPorId(this.tarefa.id))
+        }
     },
     methods: {
         salvar(){
            const operacao = !this.tarefa ? 'criar' : 'editar'
-           this.$emit(operacao, this.tarefaLocal)
-           this.tarefaLocal = {titulo: '', concluido: false};
+           //this.$emit(operacao, this.tarefa)
+           console.log('Operação: ', operacao);
         }
     }
 }

@@ -6,7 +6,7 @@
             class="list-group-item" 
             v-for="contato in contatos" 
             :key="contato.id" 
-            :contato="contato">{{contato}}</contatos-lista-iten>
+            :contato="contato"></contatos-lista-iten>
         </ul>
         <button class="btn btn-secondary mt-4 mb-4" @click.prevent="voltar">Voltar</button>
 
