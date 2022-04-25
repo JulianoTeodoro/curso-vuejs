@@ -5,7 +5,7 @@
     <h1 class="font-weight-light">Lista de Tarefas</h1>
     </div>
     <div class="col-sm-2">
-      <button class="btn btn-primary float-right" @click="exibirFormulario = !exibirFormulario">
+      <button class="btn btn-primary float-right" @click="exibirFormularioCriarTarefa">
           <i class="bi bi-plus mr-2"></i>
           <span>Criar</span>
       </button>
@@ -19,7 +19,7 @@
         :tarefa="tarefa" 
         @editar="selecionarTarefaParaEdicao" 
         @deletar="deletarItem"
-        @concluir="conclusao"></tarefa-lista-iten>
+        @concluir="editarTarefa"></tarefa-lista-iten>
     </ul>
 
     <p v-else>Nenhuma tarefa criada</p>
@@ -60,8 +60,18 @@ export default {
     methods: {
         criarTarefa(tarefa){
             console.log('Criar: ', tarefa);
-            axios.post(`${config.apiURL}/tarefas`, tarefa)
+          /*axios.post(`${config.apiURL}/tarefas`, tarefa)
             .then((response) => {
+                console.log('Post ', response);
+                this.tarefas.push(response.data);
+                this.resetar();                
+            })**/
+            axios.request({
+                method: 'post',
+                baseURL: config.apiURL,
+                url: `/tarefas`,
+                data: tarefa,
+            }).then((response) => {
                 console.log('Post ', response);
                 this.tarefas.push(response.data);
                 this.resetar();                
@@ -69,12 +79,23 @@ export default {
         },
         editarTarefa(tarefa){
             console.log('Editar: ', tarefa);
-            axios.put(`${config.apiURL}/tarefas/${tarefa.id}`, tarefa).then((response) => {
+            axios.request({
+                method: 'put',
+                baseURL: config.apiURL,
+                url: `/tarefas/${tarefa.id}`,
+                data: tarefa
+            }).then((response) => {
                 console.log(response);
                 const indice = this.tarefas.findIndex(t => t.id === tarefa.id);
                 this.tarefas.splice(indice, 1, tarefa);
                 this.resetar();
             })
+            /*axios.put(`${config.apiURL}/tarefas/${tarefa.id}`, tarefa).then((response) => {
+                console.log(response);
+                const indice = this.tarefas.findIndex(t => t.id === tarefa.id);
+                this.tarefas.splice(indice, 1, tarefa);
+                this.resetar();
+            })*/
         },
         resetar(){
             this.exibirFormulario = false,
@@ -85,10 +106,22 @@ export default {
              this.exibirFormulario = true;
         },
         deletarItem(tarefa){
+            
             console.log('Remover: ', tarefa);
             const confirmar = window.confirm('Deseja deletar a tarefa: ', tarefa.titulo);
             if(confirmar){
-                axios.delete(`${config.apiURL}/tarefas/${tarefa.id}`, tarefa).then((response) => {
+                /*axios.delete(`${config.apiURL}/tarefas/${tarefa.id}`, tarefa).then((response) => {
+                const indice = this.tarefas.findIndex(t => t.id === tarefa.id);
+                this.tarefas.splice(indice, 1);
+                console.log(`Delete tarefas/${tarefa.id}/`, response);
+                this.resetar();
+            })*/
+            axios.request({
+                method: 'delete',
+                baseURL: config.apiURL,
+                url: `/tarefas/${tarefa.id}`,
+                data: tarefa
+            }).then((response) => {
                 const indice = this.tarefas.findIndex(t => t.id === tarefa.id);
                 this.tarefas.splice(indice, 1);
                 console.log(`Delete tarefas/${tarefa.id}/`, response);
@@ -96,11 +129,25 @@ export default {
             })
             }
         },
-        conclusao(tarefa){
-            console.log('Concluir: ', tarefa);
-            axios.put(`${config.apiURL}/tarefas/${tarefa.id}`, tarefa).then((response) => {
-                tarefa.concluido = !tarefa.concluido
-                response.data.concluido = tarefa.concluido;
+        exibirFormularioCriarTarefa(){
+            if(this.tarefaSelecionada){
+                this.tarefaSelecionada = undefined
+                return
+            }
+            this.exibirFormulario = !this.exibirFormulario;
+        }
+    },
+    computed: {
+        tarefasOrdenadas(){
+            return this.tarefas.slice().sort((t1, t2) => {
+                if(t1.concluido === t2.concluido){
+                    return t1.titulo < t2.titulo
+                        ? -1
+                        : t1.titulo > t2.titulo
+                            ? 1
+                            : 0
+                }
+                return t1.concluido - t2.concluido;
             })
         }
     }
