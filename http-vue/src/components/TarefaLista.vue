@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from '../axios'
 
 import TarefaListaIten from './TarefaListaIten.vue'
 import TarefaSalvar from './TarefaSalvar.vue'
@@ -52,14 +52,14 @@ export default {
         }
     },
     created(){
-      axios.get(`${config.apiURL}/tarefas`)
+      axios.get(`/tarefas`)
       .then((response) => {
         this.tarefas = response.data;
       })
     },
     methods: {
         criarTarefa(tarefa){
-            console.log('Criar: ', tarefa);
+            //console.log('Criar: ', tarefa);
           /*axios.post(`${config.apiURL}/tarefas`, tarefa)
             .then((response) => {
                 console.log('Post ', response);
@@ -68,7 +68,6 @@ export default {
             })**/
             axios.request({
                 method: 'post',
-                baseURL: config.apiURL,
                 url: `/tarefas`,
                 data: tarefa,
             }).then((response) => {
@@ -78,10 +77,9 @@ export default {
             })
         },
         editarTarefa(tarefa){
-            console.log('Editar: ', tarefa);
+            //console.log('Editar: ', tarefa);
             axios.request({
                 method: 'put',
-                baseURL: config.apiURL,
                 url: `/tarefas/${tarefa.id}`,
                 data: tarefa
             }).then((response) => {
@@ -107,7 +105,7 @@ export default {
         },
         deletarItem(tarefa){
             
-            console.log('Remover: ', tarefa);
+            //console.log('Remover: ', tarefa);
             const confirmar = window.confirm('Deseja deletar a tarefa: ', tarefa.titulo);
             if(confirmar){
                 /*axios.delete(`${config.apiURL}/tarefas/${tarefa.id}`, tarefa).then((response) => {

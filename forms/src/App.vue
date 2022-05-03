@@ -99,6 +99,18 @@
 
             </div>
 
+            <div class="form-group">
+              <br>
+              <RangeVue 
+                :label="'Salario pretendido'"
+                v-model.number="desenvolvedor.salario"
+                min="1000"
+                max="15000"
+                step="500"
+                :inputClasses="[{'form-control-range': true}]"/>
+
+            </div>
+
             <button class="btn btn-secondary" type="reset">Resetar</button>
             <button class="btn btn-success" type="submit">Enviar</button>
 
@@ -124,6 +136,8 @@
               <li class="list-group-item"><strong>Tecnologias:</strong> {{desenvolvedor.tecnologias}} </li>
               <li class="list-group-item"><strong>Biografia:</strong> {{desenvolvedor.descricao}} </li>
               <li class="list-group-item"><strong>Receber notificações?</strong> {{desenvolvedor.notificacoes}} </li>
+              <li class="list-group-item"><strong>Salario: </strong> {{desenvolvedor.salario}} </li>
+
             </ul>
 
             <div class="card-header">Model</div>
@@ -136,7 +150,8 @@
                              'ocupacao': desenvolvedor.ocupacao,
                              'tecnologias' : desenvolvedor.tecnologias,
                              'notificacoes': desenvolvedor.notificacoes,
-                             'resumo': desenvolvedor.descricao } }}</code></pre>
+                             'resumo': desenvolvedor.descricao,
+                             'salario': desenvolvedor.salario } }}</code></pre>
             </div>
 
           </div>
@@ -150,8 +165,15 @@
   </div>
 </template>
 
+
 <script>
+
+import RangeVue from "./RangeVue.vue";
+
 export default {
+  components: {
+    RangeVue
+},
   data(){
     return {
       desenvolvedor: {},
@@ -169,7 +191,8 @@ export default {
         ocupacao: '',
         notificacoes: "Não",
         tecnologias: [],
-        descricao: ''
+        descricao: '',
+        salario: '1000'
       }
     }
   },

@@ -12,13 +12,19 @@
     },
     {
       "titulo": "Aprender JavaScript",
-      "concluido": true,
-      "id": 4
+      "concluido": false,
+      "id": 4,
+      "curso": "Vue JS"
     },
     {
       "titulo": "Aprender Vuex",
       "concluido": true,
       "id": 5
+    },
+    {
+      "titulo": "Aprender Algo",
+      "concluido": true,
+      "id": 6
     }
   ]
 }
