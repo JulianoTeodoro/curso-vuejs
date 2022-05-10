@@ -13,7 +13,7 @@
     </div>
     <br>
 
-    <h3 class="font-weight-light">A Fazer:  {{ $store.getters.totaldeTarefasAFazer }}</h3>
+    <h3 class="font-weight-light">A Fazer:  {{ totaldeTarefasAFazer }}</h3>
     <ul class="list-group" v-if="tarefasAFazer.length > 0">
         <tarefa-lista-iten v-for="tarefa in tarefasAFazer" :key="tarefa.id" :tarefa="tarefa" @editar="selecionarTarefaParaEdicao"></tarefa-lista-iten>
     </ul>
@@ -21,7 +21,7 @@
     <p v-else>Nenhuma tarefa a fazer.</p>
     <br>
 
-    <h3 class="font-weight-light">Concluidas:  {{ $store.getters.totaldeTarefasConcluidas }}</h3>
+    <h3 class="font-weight-light">Concluidas:  {{ totaldeTarefasConcluidas }}</h3>
     <ul class="list-group" v-if="tarefasConcluidas.length > 0">
         <tarefa-lista-iten v-for="tarefa in tarefasConcluidas" :key="tarefa.id" :tarefa="tarefa" @editar="selecionarTarefaParaEdicao"></tarefa-lista-iten>
     </ul>
@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 //import axios from 'axios'
 
 import TarefaListaIten from './TarefaListaIten.vue'
@@ -49,13 +49,14 @@ export default {
         TarefaSalvar
     },
     computed: {
-        ...mapState(['tarefas'],),
-        tarefasConcluidas(){
+        ...mapState(['tarefas']),
+        ...mapGetters(['tarefasConcluidas', 'tarefasAFazer', 'totaldeTarefasConcluidas', 'totaldeTarefasAFazer']),
+        /*tarefasConcluidas(){
             return this.$store.getters.tarefasConcluidas;
         },
         tarefasAFazer(){
             return this.$store.getters.tarefasAFazer;
-        }
+        }*/
     },
     data(){
         return{
