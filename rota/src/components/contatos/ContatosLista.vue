@@ -1,12 +1,21 @@
 <template>
    <div>
+       <br>
         <h3>Contatos</h3>
-        <ul class="list-group-item" v-if="contatos.length > 0">
+        <div class="form-group">
+            <input 
+                type="search*"
+                class="form-control"
+                placeholder="Buscar contatos"
+                @keyup.enter="buscar"
+                :value="busca">
+        </div>
+
+        <ul class="list-group" v-if="contatosFiltrados.length > 0">
             <contatos-lista-iten 
-            class="list-group-item" 
-            v-for="contato in contatos" 
+            v-for="contato in contatosFiltrados" 
             :key="contato.id" 
-            :contato="contato"></contatos-lista-iten>
+            :contato="contato">{{contato}}</contatos-lista-iten>
         </ul>
         <button class="btn btn-secondary mt-4 mb-4" @click.prevent="voltar">Voltar</button>
 
@@ -33,8 +42,22 @@ export default {
           // this.$router.replace('/')
           //this.$router.go(-1); voltar ou avançar pelo historico de navegação
           this.$router.back(); // voltar para a rota correta
+        },
+        buscar(event){
+            this.$router.push({
+                path: '/contatos',
+                query: { busca: event.target.value }
+            })
         }
-    }
+    },
+    computed: {
+        contatosFiltrados(){
+            const busca = this.$route.query.busca;
+            return !busca ? this.contatos
+                   : this.contatos.filter(c => c.nome.toLowerCase().includes(busca.toLowerCase()))
+        }
+    },
+    props: ['busca']
 
 }
 </script>

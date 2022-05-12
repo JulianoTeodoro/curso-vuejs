@@ -7,11 +7,8 @@
     </div>
 
     <div class="container">
-      <router-link to="/" class="btn btn-info mb-2 mr-2" exact>Home</router-link>
+      <router-link to="/home" class="btn btn-info mb-2 mr-2" exact>Home</router-link>
       <router-link to="/contatos" class="btn btn-secondary mb-2 mr-2" exact>Contatos</router-link>
-      <router-link to="/contatos/1" class="btn btn-secondary mb-2 mr-2" exact>Contato 1</router-link>
-      <router-link to="/contatos/2" class="btn btn-secondary mb-2 mr-2" exact>Contato 2</router-link>
-
 
       <router-view></router-view>
     </div>
