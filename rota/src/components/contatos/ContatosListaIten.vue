@@ -2,7 +2,7 @@
    <li class="list-group-item">
     <span>{{contato.nome}} : {{contato.id}}</span>
     <router-link
-     :to="{ name: 'contato', params: { id: contato.id } }"
+     :to="{ path: `/contatos/${contato.id}` }"
      class="btn btn-info btn-sm float-right">
      Detalhes
      </router-link>

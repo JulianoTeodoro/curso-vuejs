@@ -3,28 +3,23 @@
     {
       "titulo": "Aprender Vue",
       "concluido": false,
-      "id": 2
+      "id": 1
     },
     {
       "titulo": "Aprender Axios",
       "concluido": false,
-      "id": 3
+      "id": 2
     },
     {
       "titulo": "Aprender JavaScript",
-      "concluido": false,
-      "id": 4,
+      "concluido": true,
+      "id": 3,
       "curso": "Vue JS"
     },
     {
       "titulo": "Aprender Vuex",
       "concluido": true,
-      "id": 5
-    },
-    {
-      "titulo": "Aprender Algo",
-      "concluido": true,
-      "id": 6
+      "id": 4
     }
   ]
 }

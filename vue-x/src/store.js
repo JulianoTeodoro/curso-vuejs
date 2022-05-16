@@ -16,12 +16,24 @@ export default new Vuex.Store({
         buscarTarefaPorId: state => id => state.tarefas.find(t => t.id === id)
     },
     mutations: {
-        listarTarefas: state => {
+       /* listarTarefas: state => {
             state.tarefas = [
                 {id: 1, titulo: 'Aprender Vue', concluido: true},
                 {id: 2, titulo: 'Aprender JS', concluido: true},
                 {id: 3, titulo: 'Aprender Axios', concluido: false},    
             ]
+        }*/
+        listarTarefas: (state, { tarefas }) => {
+            console.log('before state snapshot');
+            state.tarefas = tarefas;
+            console.log('after state snapshot');
         }
+    },
+    actions: {
+        listarTarefas: (context, payload) => {
+            setTimeout(() => {
+                context.commit('listarTarefas', payload)
+            }, 2000)
+        } 
     }
 })

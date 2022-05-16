@@ -31,10 +31,18 @@ instance.interceptors.request.use(config => {
             resolve(config)
         }, 2000)
     })
-})*/ 
+}) */
 }, error => {
     console.log('Erro ao fazer requisição: ');
     return Promise.reject(error);
 })
+
+/*instance.interceptors.response.use(response => {
+    console.log('Interceptando resposta: ', response)
+    if(Array.isArray(response.data)){
+        response.data = response.data.slice(1, 3);
+    }
+    return response;
+})*/
 
 export default instance

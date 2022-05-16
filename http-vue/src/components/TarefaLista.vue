@@ -18,11 +18,13 @@
         :key="tarefa.id" 
         :tarefa="tarefa" 
         @editar="selecionarTarefaParaEdicao" 
-        @deletar="deletarItem"
+        @deletar="deletarTarefa"
         @concluir="editarTarefa"></tarefa-lista-iten>
     </ul>
 
-    <p v-else>Nenhuma tarefa criada</p>
+    <!---<p v-else>Nenhuma tarefa criada.</p>-->
+    <p v-else-if="!mensagemErro">Nenhuma tarefa criada.</p>
+    <div class="alert alert-danger" v-else>{{ mensagemErro }}</div>
 
     <tarefa-salvar
      v-if="exibirFormulario" 
@@ -48,13 +50,27 @@ export default {
         return{
             tarefas: [],
             exibirFormulario: false,
-            tarefaSelecionada: undefined
+            tarefaSelecionada: undefined,
+            mensagemErro: undefined
         }
     },
     created(){
       axios.get(`/tarefas`)
       .then((response) => {
         this.tarefas = response.data;
+      }/*, error => {
+          console.log('Erro capturado no then: ', error);
+          return Promise.reject(error);
+      }*/).catch(error => {
+          console.log('Erro capturado no catch: ', error);
+          if(error.response){
+              this.mensagemErro = `Servidor retornou um erro: ${error.message} ${error.response.statusText}`
+          } else if (error.request) {
+              this.mensagemErro = `Erro ao tentar se comunicar com o servidor: ${error.message}`
+              console.log('Erro [requisição]: ', error.request);
+          } else {
+              this.mensagemErro = `Erro ao fazer requisição ao servidor: ${error.message}`
+          }
       })
     },
     methods: {
@@ -103,17 +119,29 @@ export default {
              this.tarefaSelecionada = tarefa;
              this.exibirFormulario = true;
         },
-        deletarItem(tarefa){
+        async deletarTarefa(tarefa){
             
-            //console.log('Remover: ', tarefa);
-            const confirmar = window.confirm('Deseja deletar a tarefa: ', tarefa.titulo);
+            console.log('Remover: ', tarefa);
+            const confirmar = window.confirm(`Deseja deletar a tarefa: ${tarefa.titulo}`);
             if(confirmar){
+                try {
+                    const response = await axios.delete(`${config.apiURL}/tarefas/${tarefa.id}`, tarefa)
+                    console.log(`Delete tarefas/${tarefa.id}/`, response);
+                    const indice = this.tarefas.findIndex(t => t.id === tarefa.id);
+                    this.tarefas.splice(indice, 1);     
+                } catch(error){
+                    console.log('Erro ao deletar tarefa: ', error);
+                } finally {
+                    console.log('Executado');
+                }
+            //deletar normalmente
                 /*axios.delete(`${config.apiURL}/tarefas/${tarefa.id}`, tarefa).then((response) => {
                 const indice = this.tarefas.findIndex(t => t.id === tarefa.id);
                 this.tarefas.splice(indice, 1);
                 console.log(`Delete tarefas/${tarefa.id}/`, response);
                 this.resetar();
-            })*/
+            })
+            // requisição com cabeçalho
             axios.request({
                 method: 'delete',
                 baseURL: config.apiURL,
@@ -124,7 +152,7 @@ export default {
                 this.tarefas.splice(indice, 1);
                 console.log(`Delete tarefas/${tarefa.id}/`, response);
                 this.resetar();
-            })
+            })*/
             }
         },
         exibirFormularioCriarTarefa(){

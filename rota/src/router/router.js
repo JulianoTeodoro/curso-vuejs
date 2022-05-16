@@ -19,8 +19,13 @@ export default new VueRouter({
     component: MyContatos,
     alias: '/meuscontatos',
     children: [
-      { path: ':id', component: ContatoDetalhes, name: 'contato', props: true }, 
+      { path: ':id', component: ContatoDetalhes, name: 'contato',
+      props: (route) => ({
+          id: +route.params.id
+      })
+      }, 
       { path: ':id/editar', 
+        alias: ':id/alterar',
       components: {
         default: ContatoEditar,
         'contato-detalhes': ContatoDetalhes

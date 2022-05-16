@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapMutations } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 //import axios from 'axios'
 
 import TarefaListaIten from './TarefaListaIten.vue'
@@ -72,12 +72,12 @@ export default {
    // },
     methods: {
         //...mapMutations(['listarTarefas']),
-        ...mapMutations({
+        /*...mapMutations({
             //carregarTarefas: 'listarTarefas'
-            listarTarefas: (commit, payload, options) => {
+            carregarTarefas: (commit, payload, options) => {
                 commit('listarTarefas', payload, options)
             }
-        }),
+        }),*/
         exibirFormularioCriarTarefa(){
             if(this.tarefaSelecionada){
                 this.tarefaSelecionada = undefined;
@@ -107,7 +107,15 @@ export default {
     },
     created(){
         //this.$store.commit('listarTarefas');
-        this.listarTarefas();
+            //this.carregarTarefas();
+            this.$store.dispatch({
+                type: 'listarTarefas',
+                tarefas: [
+                {id: 1, titulo: 'Aprender Vue', concluido: true},
+                {id: 2, titulo: 'Aprender JS', concluido: true},
+                {id: 3, titulo: 'Aprender Axios', concluido: false},    
+            ]
+            });
     }
 }
 </script>
