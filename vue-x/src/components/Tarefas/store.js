@@ -1,25 +1,5 @@
-import Vue from "vue";
-import Vuex from 'vuex'
-
-import TarefasModule from './components/Tarefas/store'
-import ContadorModule from './components/contador/store'
-
-Vue.use(Vuex);
-
-const store = new Vuex.Store({
-    modules: {
-        tarefas: TarefasModule,
-        contador: ContadorModule
-    }
-})
-
-console.log(store);
-
-export default store
-
-/*export default new Vuex.Store({
+const TarefasModule = {
     state: {
-        contador: 0,
         tarefas: [],
     },
     getters: {
@@ -36,7 +16,7 @@ export default store
                 {id: 2, titulo: 'Aprender JS', concluido: true},
                 {id: 3, titulo: 'Aprender Axios', concluido: false},    
             ]
-        }
+        }*/
         listarTarefas: (state, { tarefas }) => {
             console.log('before state snapshot');
             state.tarefas = tarefas;
@@ -48,7 +28,7 @@ export default store
             const tarefas = await ('listarTarefas', payload)
             context.commit(tarefas);
         },
-        buscarTarefas: () => {
+        /*buscarTarefas: () => {
             return new Promise((resolve) => {
                 setTimeout(() => {
                     resolve([
@@ -66,7 +46,8 @@ export default store
                     console.log('Mutation listarTarefas');
                     commit('listarTarefas', tarefas)
                 })
-        }
+        }*/
     }
+}
 
-})*/
+export default TarefasModule

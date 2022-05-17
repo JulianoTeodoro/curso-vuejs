@@ -19,19 +19,19 @@ export default {
     },
     computed: {  
         ...mapState({
-        contador: state => state.contador,
+        contador: state => state.contador.contador,
         contadorMultiplicado(state){
-            return state.contador * this.contadorLocal
+            return state.contador.contador * this.contadorLocal
         }
     }) 
     },
     methods: {
         incrementar(){
-            this.$store.state.contador++;
+            this.$store.state.contador.contador++;
         },
         decrementar(){
-            this.$store.state.contador--;
+            this.$store.state.contador.contador--;
         }
-    },
+    }
 }
 </script>

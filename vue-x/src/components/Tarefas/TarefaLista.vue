@@ -36,11 +36,11 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
+import { mapState, mapGetters, mapActions } from 'vuex'
 //import axios from 'axios'
 
-import TarefaListaIten from './TarefaListaIten.vue'
-import TarefaSalvar from './TarefaSalvar.vue'
+import TarefaListaIten from '../Tarefas/TarefaListaIten.vue'
+import TarefaSalvar from '../Tarefas/TarefaSalvar.vue'
 //import config from '../../config/config'
 
 export default {
@@ -78,6 +78,7 @@ export default {
                 commit('listarTarefas', payload, options)
             }
         }),*/
+        ...mapActions(['listarTarefas']),
         exibirFormularioCriarTarefa(){
             if(this.tarefaSelecionada){
                 this.tarefaSelecionada = undefined;
@@ -108,7 +109,8 @@ export default {
     created(){
         //this.$store.commit('listarTarefas');
             //this.carregarTarefas();
-            this.$store.dispatch({
+            setTimeout(async () => {
+            await this.$store.dispatch({
                 type: 'listarTarefas',
                 tarefas: [
                 {id: 1, titulo: 'Aprender Vue', concluido: true},
@@ -116,6 +118,10 @@ export default {
                 {id: 3, titulo: 'Aprender Axios', concluido: false},    
             ]
             });
+            }, 3000)
+            /*this.$store.commit('listarTarefas').then(() => {
+                console.log('Actions executadas');
+            })*/
     }
 }
 </script>
