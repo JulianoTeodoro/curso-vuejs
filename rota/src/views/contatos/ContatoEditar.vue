@@ -13,6 +13,20 @@ export default {
             type: Number,
             required: true
         }
+    },
+    data(){
+        return{
+            curso: 'Curso de VueJS'
+        }
+    },
+    beforeRouteEnter(to, from, next){
+        if(to.query.autenticado === 'true'){
+            console.log('beforerouteenter');
+            return next(vm => {
+                console.log('Curso: ', vm.curso);
+            });
+        }
+        next('/home');
     }
 }
 </script>

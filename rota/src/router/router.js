@@ -5,39 +5,48 @@ import MyHome from '../views/MyHome.vue'
 import ContatoDetalhes from '@/views/contatos/ContatoDetalhes.vue'
 import ContatosHome from '@/views/contatos/ContatosHome.vue'
 import ContatoEditar from '@/views/contatos/ContatoEditar.vue'
-import ErroS404 from '@/views/contatos/ErroS404.vue'
+import ErroS404 from '@/views/ErroS404.vue'
 import Erro404Contatos from '@/views/contatos/Erro404Contatos.vue'
 
 
 Vue.use(VueRouter)
 
-export default new VueRouter({
+const router = new VueRouter({
   mode: 'history',
   linkExactActiveClass: 'active',
   routes : [
     {path: '/contatos',
     component: MyContatos,
     alias: '/meuscontatos',
+    props: (route) => {
+      const busca = route.query.busca
+      return busca ? { busca } : {}
+    },
     children: [
-      { path: ':id', component: ContatoDetalhes, name: 'contato',
+      { path: ':id(\\d+)', component: ContatoDetalhes, name: 'contato',
       props: (route) => ({
           id: +route.params.id
-      })
+      }),
       }, 
-      { path: ':id/editar', 
-        alias: ':id/alterar',
+      { path: ':id(\\d+)/editar/:opcional?', 
+        //path: ':id(\\d+)/editar/:zeroouMais*', 
+        //path: ':id(\\d+)/editar/:umouMais+',
+        alias: ':id(\\d+)/alterar',
+        beforeEnter(to, from, next) {
+          console.log('before enter');
+          if(to.query.autenticado === 'true'){
+            return next();
+          }
+          next({path: '/home'})
+        },
       components: {
         default: ContatoEditar,
         'contato-detalhes': ContatoDetalhes
       },
-      props: (route) => {
-        const busca = route.query.busca
-        return busca ? { busca } : {}
-      }
-      /*props: {
+      props: {
         default: true,
         'contato-detalhes': true
-      }*/ 
+      }, 
       },   
       { path: '', component: ContatosHome },
     ]
@@ -52,11 +61,11 @@ export default new VueRouter({
   } },*/
   /*{ path: '/', redirect: () => {
     return { name: 'contato' }
-  } },*/
-  {
+  } },
+  /*{
     path: '/contatos',
     redirect: '/meuscontatos'
-  },
+  },*/
   {
     path: '*',
     component: ErroS404
@@ -67,3 +76,14 @@ export default new VueRouter({
   }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  console.log('beforeEach');
+  next();
+})
+
+router.afterEach(() => {
+  console.log('aftereach');
+})
+
+export default router
