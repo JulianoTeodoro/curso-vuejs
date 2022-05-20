@@ -1,10 +1,11 @@
 const TarefasModule = {
+    namespaced: true,
     state: {
         tarefas: [],
     },
     getters: {
-        tarefasConcluidas: (state) => state.tarefas.filter(t => t.concluido),
-        tarefasAFazer: (state) => state.tarefas.filter(t => !t.concluido),
+        tarefasConcluidas: state => state.tarefas.filter(t => t.concluido),
+        tarefasAFazer: state => state.tarefas.filter(t => !t.concluido),
         totaldeTarefasConcluidas: (state, getters) => getters.tarefasConcluidas.length,
         totaldeTarefasAFazer: (state, getters) => getters.tarefasAFazer.length,
         buscarTarefaPorId: state => id => state.tarefas.find(t => t.id === id)
@@ -24,11 +25,11 @@ const TarefasModule = {
         }
     },
     actions: {
-        listarTarefas: async (context, payload) => {
+        /*listarTarefas: async (context, payload) => {
             const tarefas = await ('listarTarefas', payload)
             context.commit(tarefas);
-        },
-        /*buscarTarefas: () => {
+        },*/
+         buscarTarefas: () => {
             return new Promise((resolve) => {
                 setTimeout(() => {
                     resolve([
@@ -39,7 +40,7 @@ const TarefasModule = {
                 }, 2000)
             })
         },
-        listarTarefas: ({ commit, dispatch }) => {
+        /*listarTarefas: ({ commit, dispatch }) => {
             console.log('Action listarTarefas');
             return dispatch('buscarTarefas')
                 .then(tarefas => {
@@ -47,6 +48,12 @@ const TarefasModule = {
                     commit('listarTarefas', tarefas)
                 })
         }*/
+        listarTarefas: async ({commit, dispatch}) => {
+            console.log('Action listarTarefas');
+            const tarefas = await dispatch('buscarTarefas');
+            console.log('Mutation listarTarefas');
+            commit('listarTarefas', { tarefas })
+        }
     }
 }
 

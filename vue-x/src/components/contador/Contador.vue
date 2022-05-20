@@ -18,10 +18,10 @@ export default {
         }
     },
     computed: {  
-        ...mapState({
-        contador: state => state.contador.contador,
+        ...mapState('contador', {
+        contador: state => state.contador,
         contadorMultiplicado(state){
-            return state.contador.contador * this.contadorLocal
+            return state.contador * this.contadorLocal
         }
     }) 
     },

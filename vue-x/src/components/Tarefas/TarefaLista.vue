@@ -36,12 +36,14 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions } from 'vuex'
+import { createNamespacedHelpers } from 'vuex'
 //import axios from 'axios'
 
 import TarefaListaIten from '../Tarefas/TarefaListaIten.vue'
 import TarefaSalvar from '../Tarefas/TarefaSalvar.vue'
 //import config from '../../config/config'
+
+const { mapActions, mapGetters, mapState } = createNamespacedHelpers('tarefas')
 
 export default {
     components: {
@@ -78,7 +80,12 @@ export default {
                 commit('listarTarefas', payload, options)
             }
         }),*/
-        ...mapActions(['listarTarefas']),
+        ...mapActions({
+            carregarTarefas: 'listarTarefas',
+            listarTarefas: (dispatch, payload, options) => {
+                return dispatch('listarTarefas', payload, options)
+            }
+        }),
         exibirFormularioCriarTarefa(){
             if(this.tarefaSelecionada){
                 this.tarefaSelecionada = undefined;
@@ -109,7 +116,7 @@ export default {
     created(){
         //this.$store.commit('listarTarefas');
             //this.carregarTarefas();
-            setTimeout(async () => {
+            /*setTimeout(async () => {
             await this.$store.dispatch({
                 type: 'listarTarefas',
                 tarefas: [
@@ -119,9 +126,13 @@ export default {
             ]
             });
             }, 3000)
-            /*this.$store.commit('listarTarefas').then(() => {
+            this.$store.commit('listarTarefas').then(() => {
                 console.log('Actions executadas');
             })*/
+            setTimeout(async () => {
+                await this.listarTarefas()
+                console.log('Actions executadas');
+            }, 3000)
     }
 }
 </script>
