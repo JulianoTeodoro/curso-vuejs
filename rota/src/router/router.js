@@ -7,9 +7,15 @@ import ContatosHome from '@/views/contatos/ContatosHome.vue'
 import ContatoEditar from '@/views/contatos/ContatoEditar.vue'
 import ErroS404 from '@/views/ErroS404.vue'
 import Erro404Contatos from '@/views/contatos/Erro404Contatos.vue'
+import LoginVue from '@/views/login/LoginVue.vue'
+import EventBus from '@/event-bus'
 
 
 Vue.use(VueRouter)
+
+const extrairParametroId = route => ({
+  id: +route.params.id
+})
 
 const router = new VueRouter({
   mode: 'history',
@@ -32,20 +38,23 @@ const router = new VueRouter({
         //path: ':id(\\d+)/editar/:zeroouMais*', 
         //path: ':id(\\d+)/editar/:umouMais+',
         alias: ':id(\\d+)/alterar',
-        beforeEnter(to, from, next) {
+        meta: {
+          requerAutenticacao: true
+        },
+        /*beforeEnter(to, from, next) {
           console.log('before enter');
           if(to.query.autenticado === 'true'){
             return next();
           }
           next({path: '/home'})
-        },
+        },*/
       components: {
         default: ContatoEditar,
         'contato-detalhes': ContatoDetalhes
       },
       props: {
-        default: true,
-        'contato-detalhes': true
+        default: extrairParametroId,
+        'contato-detalhes': extrairParametroId
       }, 
       },   
       { path: '', component: ContatosHome },
@@ -73,17 +82,37 @@ const router = new VueRouter({
   {
     path: '/contatos*',
     component: Erro404Contatos
+  },
+  {
+    path: '/login',
+    component: LoginVue
   }
   ]
 })
 
 router.beforeEach((to, from, next) => {
   console.log('beforeEach');
+  console.log('Requer autenticação: ', to.meta.requerAutenticacao);
+  const estaAutenticado = EventBus.autenticado;
+  if(to.matched.some(rota => rota.meta.requerAutenticacao)){
+    if (!estaAutenticado){
+      next({
+        path: '/login',
+        query: { redirecionar: to.fullPath }
+      })
+      return
+    }
+  }
   next();
 })
 
 router.afterEach(() => {
   console.log('aftereach');
+})
+
+router.beforeResolve((to, from, next) => {
+  console.log('beforeResolve');
+  next();
 })
 
 export default router

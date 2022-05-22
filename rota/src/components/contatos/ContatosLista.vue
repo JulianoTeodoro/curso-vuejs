@@ -23,6 +23,8 @@
 </template>
 <script>
 import ContatosListaIten from './ContatosListaIten.vue'
+import EventBus from './../../event-bus'
+
 export default {
     components: {
       ContatosListaIten
@@ -30,9 +32,7 @@ export default {
     data(){
         return{
             contatos: [
-                    {id: 1, nome: 'Juliano Teodoro', email: 'isaac@gmail.com'},
-                    {id: 2, nome: 'Lebron James', email: 'james@gmail.com'},
-                    {id: 3, nome: 'Michael Jordan', email: 'jordan@gmail.com'}
+
             ]
         }
     },
@@ -57,7 +57,10 @@ export default {
                    : this.contatos.filter(c => c.nome.toLowerCase().includes(busca.toLowerCase()))
         }
     },
-    props: ['busca']
+    props: ['busca'],
+    created(){
+        this.contatos = EventBus.contatos;
+    }
 
 }
 </script>
