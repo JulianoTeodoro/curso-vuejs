@@ -71,7 +71,7 @@ export default {
     methods: {
         salvar(){
            const operacao = !this.tarefa ? 'criar' : 'editar'
-           //this.$emit(operacao, this.tarefa)
+           this.$emit(operacao, this.tarefa)
            console.log('Operação: ', operacao);
         }
     }

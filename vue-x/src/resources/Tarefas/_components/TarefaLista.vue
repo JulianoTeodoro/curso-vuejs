@@ -15,7 +15,7 @@
 
     <h3 class="font-weight-light">A Fazer:  {{ totaldeTarefasAFazer }}</h3>
     <ul class="list-group" v-if="tarefasAFazer.length > 0">
-        <tarefa-lista-iten v-for="tarefa in tarefasAFazer" :key="tarefa.id" :tarefa="tarefa" @editar="selecionarTarefaParaEdicao"></tarefa-lista-iten>
+        <tarefa-lista-iten v-for="tarefa in tarefasAFazer" :key="tarefa.id" :tarefa="tarefa" @concluir="concluirTarefa({tarefa: $event})" @editar="selecionarTarefaParaEdicao"></tarefa-lista-iten>
     </ul>
 
     <p v-else>Nenhuma tarefa a fazer.</p>
@@ -23,7 +23,7 @@
 
     <h3 class="font-weight-light">Concluidas:  {{ totaldeTarefasConcluidas }}</h3>
     <ul class="list-group" v-if="tarefasConcluidas.length > 0">
-        <tarefa-lista-iten v-for="tarefa in tarefasConcluidas" :key="tarefa.id" :tarefa="tarefa" @editar="selecionarTarefaParaEdicao"></tarefa-lista-iten>
+        <tarefa-lista-iten v-for="tarefa in tarefasConcluidas" :key="tarefa.id" :tarefa="tarefa" @concluir="concluirTarefa({tarefa: $event})" @editar="selecionarTarefaParaEdicao"></tarefa-lista-iten>
     </ul>
     <p v-else>Nenhuma tarefa concluida.</p>
 
@@ -39,8 +39,9 @@
 import { createNamespacedHelpers } from 'vuex'
 //import axios from 'axios'
 
-import TarefaListaIten from '../Tarefas/TarefaListaIten.vue'
-import TarefaSalvar from '../Tarefas/TarefaSalvar.vue'
+import TarefaListaIten from './TarefaListaIten.vue'
+import TarefaSalvar from './TarefaSalvar.vue'
+//import register from './../_store/register'
 //import config from '../../config/config'
 
 const { mapActions, mapGetters, mapState } = createNamespacedHelpers('tarefas')
@@ -52,7 +53,7 @@ export default {
     },
     computed: {
         ...mapState(['tarefas']),
-        ...mapGetters(['tarefasConcluidas', 'tarefasAFazer', 'totaldeTarefasConcluidas', 'totaldeTarefasAFazer']),
+        ...mapGetters(['tarefasConcluidas', 'tarefasAFazer', 'totaldeTarefasConcluidas', 'totaldeTarefasAFazer', 'boasVindas']),
         /*tarefasConcluidas(){
             return this.$store.getters.tarefasConcluidas;
         },
@@ -79,13 +80,18 @@ export default {
             carregarTarefas: (commit, payload, options) => {
                 commit('listarTarefas', payload, options)
             }
-        }),*/
+        }),
         ...mapActions({
             carregarTarefas: 'listarTarefas',
             listarTarefas: (dispatch, payload, options) => {
                 return dispatch('listarTarefas', payload, options)
-            }
-        }),
+            },
+            
+        }),*/
+        ...mapActions([
+            'concluirTarefa',
+            'listarTarefas'
+        ]),
         exibirFormularioCriarTarefa(){
             if(this.tarefaSelecionada){
                 this.tarefaSelecionada = undefined;
@@ -93,7 +99,7 @@ export default {
             }
             this.exibirFormulario = !this.exibirFormulario;
         },
-        criarTarefa(tarefa){
+        /*criarTarefa(tarefa){
             console.log('Criar: ', tarefa);
             this.$store.state.tarefas.push(tarefa);
             this.resetar();                
@@ -103,7 +109,7 @@ export default {
                 const indice = this.$store.state.tarefas.findIndex(t => t.id === tarefa.id);
                 this.$store.state.tarefas.splice(indice, 1, tarefa);
                 this.resetar();
-        },
+        },*/
         resetar(){
             this.exibirFormulario = false,
             this.tarefaSelecionada = undefined
@@ -128,11 +134,15 @@ export default {
             }, 3000)
             this.$store.commit('listarTarefas').then(() => {
                 console.log('Actions executadas');
-            })*/
+            })
             setTimeout(async () => {
+                console.log('Usuario atual: ', this.boasVindas);
                 await this.listarTarefas()
                 console.log('Actions executadas');
             }, 3000)
+            console.log('Boas vindas: ', this.boasVindas)*/
+            //register(this.$store);
+            this.listarTarefas();
     }
 }
 </script>

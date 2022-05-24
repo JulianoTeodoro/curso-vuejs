@@ -5,7 +5,8 @@
         <button 
             class="btn btn-sm mr-4" 
             :class="classeCSS" 
-            :title="textoBotaoConcatenado">
+            :title="textoBotaoConcatenado"
+            @click="$emit('concluir', tarefa)">
                 <i class="bi bi-check-lg"></i>
         </button>
         <button 
@@ -14,7 +15,7 @@
             @click="$emit('editar', tarefa)">
                 <i class="bi bi-pencil"></i>
         </button>
-        <button class="btn btn-danger btn-sm" title="Deletar">
+        <button class="btn btn-danger btn-sm" title="Deletar" @click="$emit('deletar', tarefa)">
             <i class="bi bi-trash"></i>
         </button>
     </li>
